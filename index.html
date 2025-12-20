@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QIAOAI VOICE - 声音连接世界，文化跨越边界</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0a4d8c 0%, #1a7fc7 50%, #3fb5d8 100%);
+            --accent-color: #0a4d8c;
+            --accent-light: #3fb5d8;
+            --text-dark: #1a2b3c;
+            --text-light: #5a6b7c;
+            --bg-cream: #fafbfc;
+            --bg-white: #ffffff;
+            --shadow-soft: 0 8px 30px rgba(10, 77, 140, 0.08);
+            --shadow-hover: 0 15px 50px rgba(10, 77, 140, 0.12);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Noto Sans JP', 'Montserrat', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body.lang-en {
+            font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
+        }
+
+        body.lang-jp {
+            font-family: 'Noto Sans JP', 'Montserrat', sans-serif;
+        }
+
+        /* Background decoration */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            opacity: 0.03;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            top: -150px;
+            right: -150px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -100px;
+            left: -100px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 4px 16px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+            background: rgba(10, 77, 140, 0.05);
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 3px;
+            margin-left: 15px;
+            padding: 4px;
+            background: rgba(10, 77, 140, 0.05);
+            border-radius: 25px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .lang-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .lang-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn span {
+            width: 22px;
+            height: 2px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: auto;
+            padding: 100px 30px 40px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--text-light);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        /* Sections */
+        .section {
+            padding: 50px 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            color: var(--accent-color);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .company-names {
+            display: grid;
+            gap: 10px;
+        }
+
+        .company-name-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            background: var(--bg-cream);
+            border-radius: 8px;
+        }
+
+        .company-name-item .lang-label {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 38px;
+            text-align: center;
+        }
+
+        .company-name-item .name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Philosophy */
+        .philosophy-item {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: var(--bg-white);
+            border-radius: 10px;
+            box-shadow: var(--shadow-soft);
+            font-size: 0.95rem;
+        }
+
+        .philosophy-item .lang {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* About */
+        .about-content {
+            font-size: 0.95rem;
+            line-height: 1.9;
+        }
+
+        .about-highlight {
+            background: linear-gradient(120deg, rgba(63, 181, 216, 0.15) 0%, rgba(10, 77, 140, 0.15) 100%);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        /* Services - 原网站风格 */
+        .services-card {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+
+        .service-item {
+            margin-bottom: 20px;
+            padding-left: 5px;
+        }
+
+        .service-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .service-main {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .service-main::before {
+            content: '◆';
+            color: var(--accent-color);
+            margin-right: 8px;
+        }
+
+        .service-sub {
+            padding-left: 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .service-sub-item::before {
+            content: '・';
+            color: var(--accent-light);
+        }
+
+        .service-note {
+            padding-left: 20px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .service-note::before {
+            content: '※ ';
+            color: var(--accent-color);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .contact-list {
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .contact-line {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(10, 77, 140, 0.06);
+        }
+
+        .contact-line:last-child {
+            border-bottom: none;
+        }
+
+        .contact-line .emoji {
+            font-size: 1.1rem;
+            margin-right: 10px;
+            width: 25px;
+        }
+
+        .contact-line .label {
+            color: var(--text-light);
+            margin-right: 5px;
+        }
+
+        .contact-line a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-line a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-line .value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .contact-line .sub {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-left: 3px;
+        }
+
+        .qr-codes {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-top: 25px;
+            border-top: 1px solid rgba(10, 77, 140, 0.08);
+        }
+
+        .qr-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-cream);
+            border-radius: 12px;
+        }
+
+        .qr-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .qr-item p {
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+        }
+
+        /* Registration Info */
+        .registration-info {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--bg-cream);
+            border-radius: 12px;
+        }
+
+        .registration-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .registration-row {
+            display: flex;
+            font-size: 0.9rem;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(10, 77, 140, 0.08);
+        }
+
+        .registration-row:last-child {
+            border-bottom: none;
+        }
+
+        .registration-row .label {
+            color: var(--text-light);
+            min-width: 90px;
+        }
+
+        .registration-row .value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #f0f7fc 0%, #e8f4f8 100%);
+            color: var(--text-dark);
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(10, 77, 140, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-logo {
+            width: 45px;
+            height: auto;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            font-size: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(10, 77, 140, 0.1);
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 8px 15px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .lang-switcher {
+                margin-left: 8px;
+            }
+
+            .lang-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+
+            .hero {
+                padding: 80px 15px 30px;
+            }
+
+            .hero-logo {
+                width: 90px;
+            }
+
+            .section {
+                padding: 35px 15px;
+            }
+
+            .info-card, .services-card, .contact-section {
+                padding: 20px 15px;
+            }
+
+            .company-name-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .contact-line {
+                flex-wrap: wrap;
+                font-size: 0.9rem;
+            }
+
+            .qr-codes {
+                gap: 10px;
+            }
+
+            .qr-item {
+                padding: 10px;
+            }
+
+            .qr-item img {
+                width: 70px;
+                height: 70px;
+            }
+
+            .registration-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            footer {
+                padding: 20px 15px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                display: none;
+            }
+        }
+
+        /* Language switching */
+        [data-lang] { display: none; }
+        [data-lang="zh"] { display: block; }
+        span[data-lang], a[data-lang] { display: none; }
+        span[data-lang="zh"], a[data-lang="zh"] { display: inline; }
+
+        body.lang-en [data-lang] { display: none; }
+        body.lang-en [data-lang="en"] { display: block; }
+        body.lang-en span[data-lang], body.lang-en a[data-lang] { display: none; }
+        body.lang-en span[data-lang="en"], body.lang-en a[data-lang="en"] { display: inline; }
+
+        body.lang-jp [data-lang] { display: none; }
+        body.lang-jp [data-lang="jp"] { display: block; }
+        body.lang-jp span[data-lang], body.lang-jp a[data-lang] { display: none; }
+        body.lang-jp span[data-lang="jp"], body.lang-jp a[data-lang="jp"] { display: inline; }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="qiaoai.png" alt="QIAOAI VOICE">
+                <span class="logo-text">QIAOAI VOICE</span>
+            </a>
+            <nav>
+                <a href="#about" class="nav-link">
+                    <span data-lang="zh">关于</span>
+                    <span data-lang="en">About</span>
+                    <span data-lang="jp">概要</span>
+                </a>
+                <a href="#services" class="nav-link">
+                    <span data-lang="zh">服务</span>
+                    <span data-lang="en">Services</span>
+                    <span data-lang="jp">サービス</span>
+                </a>
+                <a href="#contact" class="nav-link">
+                    <span data-lang="zh">联系</span>
+                    <span data-lang="en">Contact</span>
+                    <span data-lang="jp">連絡</span>
+                </a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-language="zh">中文</button>
+                    <button class="lang-btn" data-language="en">EN</button>
+                    <button class="lang-btn" data-language="jp">日本語</button>
+                </div>
+                <button class="mobile-menu-btn" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="qiaoai.png" alt="QIAOAI VOICE" class="hero-logo">
+            <h1 class="hero-title">
+                <span data-lang="zh">上海乔爱之声文化传播有限公司</span>
+                <span data-lang="en">Shanghai Qiaoai Voice Culture & Media Co., Ltd.</span>
+                <span data-lang="jp">ジョウアイ・メディア株式会社</span>
+            </h1>
+            <p class="hero-subtitle">
+                <span data-lang="zh">声音连接世界，文化跨越边界</span>
+                <span data-lang="en">Voice Connects the World, Culture Knows No Borders</span>
+                <span data-lang="jp">声で世界をつなぎ、文化で国境を越える</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Company Name -->
+    <section class="section">
+        <h2 class="section-title">
+            <span data-lang="zh">公司名称</span>
+            <span data-lang="en">Company Name</span>
+            <span data-lang="jp">会社名</span>
+        </h2>
+        <div class="info-card">
+            <div class="company-names">
+                <div class="company-name-item">
+                    <span class="lang-label">中文</span>
+                    <span class="name">上海乔爱之声文化传播有限公司</span>
+                </div>
+                <div class="company-name-item">
+                    <span class="lang-label">EN</span>
+                    <span class="name">Shanghai Qiaoai Voice Culture & Media Co., Ltd.</span>
+                </div>
+                <div class="company-name-item">
+                    <span class="lang-label">日本語</span>
+                    <span class="name">ジョウアイ・メディア株式会社（Jōai Media Co., Ltd.）</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="section">
+        <h2 class="section-title">
+            <span data-lang="zh">公司理念 / 品牌口号</span>
+            <span data-lang="en">Philosophy / Slogan</span>
+            <span data-lang="jp">理念 / スローガン</span>
+        </h2>
+        <div class="philosophy-item">
+            <span class="lang">◆中文：</span>声音连接世界，文化跨越边界
+        </div>
+        <div class="philosophy-item">
+            <span class="lang">◆英文：</span>Voice Connects the World, Culture Knows No Borders
+        </div>
+        <div class="philosophy-item">
+            <span class="lang">◆日文：</span>声で世界をつなぎ、文化で国境を越える
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+        <h2 class="section-title">
+            <span data-lang="zh">公司简介</span>
+            <span data-lang="en">About Us</span>
+            <span data-lang="jp">会社概要</span>
+        </h2>
+        <div class="info-card">
+            <div class="about-content" data-lang="zh">
+                <p><span class="about-highlight">上海乔爱之声文化传播有限公司</span>是一家致力于中外文化交流与数字传播的综合型文化企业。</p>
+                <br>
+                <p>本公司依法在中国注册为有限责任公司（有限公司），该公司形态等同于日本的株式会社，是中国最具信任度的企业形式之一。</p>
+                <br>
+                <p>我们以「<span class="about-highlight">声音连接世界，文化跨越边界</span>」为理念，融合传媒、语言与互联网技术，打造多元化的国际传播平台。</p>
+            </div>
+            <div class="about-content" data-lang="en">
+                <p><span class="about-highlight">Shanghai Qiaoai Voice Culture & Media Co., Ltd.</span> is a comprehensive cultural enterprise dedicated to cultural exchange between China and foreign countries and digital communication.</p>
+                <br>
+                <p>Our company is legally registered in China as a Limited Liability Company (LLC), which is equivalent to a Kabushiki Kaisha (株式会社) in Japan and is one of the most trusted forms of business in China.</p>
+                <br>
+                <p>With our philosophy of "<span class="about-highlight">Voice Connects the World, Culture Knows No Borders</span>", we integrate media, language, and internet technology to create a diversified international communication platform.</p>
+            </div>
+            <div class="about-content" data-lang="jp">
+                <p><span class="about-highlight">ジョウアイ・メディア株式会社</span>は、中国と海外の文化交流およびデジタルコミュニケーションに専念する総合文化企業です。</p>
+                <br>
+                <p>当社は中国で有限責任公司（有限公司）として法的に登録されており、これは日本の株式会社に相当し、中国で最も信頼性の高い企業形態の一つです。</p>
+                <br>
+                <p>「<span class="about-highlight">声で世界をつなぎ、文化で国境を越える</span>」という理念のもと、メディア、言語、インターネット技術を融合し、多様な国際コミュニケーションプラットフォームを構築しています。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services - 原网站风格 -->
+    <section id="services" class="section">
+        <h2 class="section-title">
+            <span data-lang="zh">主要业务领域</span>
+            <span data-lang="en">Business Areas</span>
+            <span data-lang="jp">事業分野</span>
+        </h2>
+        <div class="services-card">
+            <!-- 中文 -->
+            <div data-lang="zh">
+                <div class="service-item">
+                    <div class="service-main">多语言翻译、口译与陪同服务</div>
+                    <div class="service-sub">
+                        <div class="service-sub-item">国际展会翻译（如东京Big Sight等）</div>
+                        <div class="service-sub-item">医疗翻译（诊疗记录与医学术语翻译）</div>
+                        <div class="service-sub-item">医院陪同翻译与挂号预约支持</div>
+                    </div>
+                    <div class="service-note">本服务不涉及医疗行为或治疗介绍，专注于语言支持与就诊流程协助。</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">互联网短视频与娱乐直播内容策划与运营</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">网络电商与跨境品牌推广</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">海外业务洽谈与采购协作支持</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">留学与国际交流咨询</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">商务合作与品牌推广策划</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">海外商品选品与代购支持</div>
+                </div>
+            </div>
+            <!-- English -->
+            <div data-lang="en">
+                <div class="service-item">
+                    <div class="service-main">Multilingual Translation, Interpretation & Escort Services</div>
+                    <div class="service-sub">
+                        <div class="service-sub-item">International exhibition translation (e.g., Tokyo Big Sight)</div>
+                        <div class="service-sub-item">Medical translation (medical records & terminology)</div>
+                        <div class="service-sub-item">Hospital escort interpretation & appointment support</div>
+                    </div>
+                    <div class="service-note">This service does not involve medical treatment or referrals, focusing solely on language support and appointment assistance.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">Short Video & Live Streaming Content Planning</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">E-commerce & Cross-border Brand Promotion</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">Overseas Business Negotiation & Procurement Support</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">Study Abroad & International Exchange Consulting</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">Business Cooperation & Brand Planning</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">Overseas Product Selection & Purchasing Support</div>
+                </div>
+            </div>
+            <!-- Japanese -->
+            <div data-lang="jp">
+                <div class="service-item">
+                    <div class="service-main">多言語翻訳・通訳・同行サービス</div>
+                    <div class="service-sub">
+                        <div class="service-sub-item">国際展示会通訳（東京ビッグサイトなど）</div>
+                        <div class="service-sub-item">医療翻訳（診療記録・医学用語）</div>
+                        <div class="service-sub-item">病院同行通訳・予約サポート</div>
+                    </div>
+                    <div class="service-note">本サービスは医療行為や治療紹介には関与せず、言語サポートと受診手続きの補助に特化しています。</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">ショート動画・ライブ配信コンテンツ企画・運営</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">EC・越境ブランドプロモーション</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">海外ビジネス商談・調達協力サポート</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">留学・国際交流コンサルティング</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">ビジネス提携・ブランド企画</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-main">海外商品セレクト・代理購入サポート</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+        <h2 class="section-title">
+            <span data-lang="zh">联系方式</span>
+            <span data-lang="en">Contact</span>
+            <span data-lang="jp">お問い合わせ</span>
+        </h2>
+        <div class="contact-section">
+            <div class="contact-list">
+                <div class="contact-line">
+                    <span class="emoji">📩</span>
+                    <span class="label">Email:</span>
+                    <span class="value">935198051z@gmail.com(東京)</span>
+                </div>
+                <div class="contact-line">
+                    <span class="emoji">📩</span>
+                    <span class="label">Email:</span>
+                    <span class="value">935198051@qq.com(上海)</span>
+                </div>
+                <div class="contact-line">
+                    <span class="emoji">📱</span>
+                    <span class="label">Tel：</span>
+                    <span class="value">18817726107<span class="sub">(上海)</span></span>
+                    <span style="margin: 0 5px;">/</span>
+                    <span class="value">080-3551-6107<span class="sub">(東京)</span></span>
+                </div>
+                <div class="contact-line">
+                    <span class="emoji">💬</span>
+                    <span class="label">WeChat：</span>
+                    <span class="value">Lena6107</span>
+                </div>
+                <div class="contact-line">
+                    <span class="emoji">💬</span>
+                    <span class="label">LINE：</span>
+                    <span class="value">35516107</span>
+                </div>
+            </div>
+
+            <div class="qr-codes">
+                <div class="qr-item">
+                    <img src="wechat.jpg" alt="WeChat">
+                    <p>WeChat</p>
+                </div>
+                <div class="qr-item">
+                    <img src="line.jpg" alt="LINE">
+                    <p>LINE</p>
+                </div>
+                <div class="qr-item">
+                    <img src="WhatsApp.jpg" alt="WhatsApp">
+                    <p>WhatsApp</p>
+                </div>
+            </div>
+
+            <div class="registration-info">
+                <h4>
+                    <span data-lang="zh">公司注册信息</span>
+                    <span data-lang="en">Registration Info</span>
+                    <span data-lang="jp">登記情報</span>
+                </h4>
+                <div class="registration-row">
+                    <span class="label">
+                        <span data-lang="zh">法人代表：</span>
+                        <span data-lang="en">Representative:</span>
+                        <span data-lang="jp">法人代表：</span>
+                    </span>
+                    <span class="value">张咏</span>
+                </div>
+                <div class="registration-row">
+                    <span class="label">
+                        <span data-lang="zh">公司类型：</span>
+                        <span data-lang="en">Type:</span>
+                        <span data-lang="jp">会社形態：</span>
+                    </span>
+                    <span class="value">
+                        <span data-lang="zh">有限责任公司（有限公司）</span>
+                        <span data-lang="en">Limited Liability Company</span>
+                        <span data-lang="jp">有限責任公司（有限公司）</span>
+                    </span>
+                </div>
+                <div class="registration-row">
+                    <span class="label">
+                        <span data-lang="zh">成立时间：</span>
+                        <span data-lang="en">Established:</span>
+                        <span data-lang="jp">設立日：</span>
+                    </span>
+                    <span class="value">2025年8月15日</span>
+                </div>
+                <div class="registration-row">
+                    <span class="label">
+                        <span data-lang="zh">登记机关：</span>
+                        <span data-lang="en">Authority:</span>
+                        <span data-lang="jp">登記機関：</span>
+                    </span>
+                    <span class="value">
+                        <span data-lang="zh">上海市市场监督管理局</span>
+                        <span data-lang="en">Shanghai Administration for Market Regulation</span>
+                        <span data-lang="jp">上海市市場監督管理局</span>
+                    </span>
+                </div>
+                <div class="registration-row">
+                    <span class="label">
+                        <span data-lang="zh">注册地址：</span>
+                        <span data-lang="en">Address:</span>
+                        <span data-lang="jp">登記住所：</span>
+                    </span>
+                    <span class="value">
+                        <span data-lang="zh">中国·上海</span>
+                        <span data-lang="en">Shanghai, China</span>
+                        <span data-lang="jp">中国・上海</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <img src="qiaoai.png" alt="QIAOAI" class="footer-logo">
+                <span class="footer-brand">QIAOAI VOICE</span>
+            </div>
+            <div class="footer-links">
+                <a href="#about">
+                    <span data-lang="zh">关于</span>
+                    <span data-lang="en">About</span>
+                    <span data-lang="jp">概要</span>
+                </a>
+                <a href="#services">
+                    <span data-lang="zh">服务</span>
+                    <span data-lang="en">Services</span>
+                    <span data-lang="jp">サービス</span>
+                </a>
+                <a href="#contact">
+                    <span data-lang="zh">联系</span>
+                    <span data-lang="en">Contact</span>
+                    <span data-lang="jp">連絡</span>
+                </a>
+            </div>
+            <p class="copyright">© 2025 Shanghai Qiaoai Voice Culture & Media Co., Ltd.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Language switching function
+        function setLanguage(lang) {
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`[data-language="${lang}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            document.body.classList.remove('lang-zh', 'lang-en', 'lang-jp');
+            if (lang !== 'zh') document.body.classList.add(`lang-${lang}`);
+            
+            // Update HTML lang attribute
+            const langMap = { zh: 'zh-CN', en: 'en', jp: 'ja' };
+            document.documentElement.lang = langMap[lang] || 'zh-CN';
+            
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        // Detect browser language
+        function detectBrowserLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            const lang = browserLang.toLowerCase();
+            
+            if (lang.startsWith('ja')) {
+                return 'jp';
+            } else if (lang.startsWith('en')) {
+                return 'en';
+            } else if (lang.startsWith('zh')) {
+                return 'zh';
+            }
+            // Default to Chinese for other languages
+            return 'zh';
+        }
+
+        // Initialize language
+        function initLanguage() {
+            // Priority: 1. Saved preference, 2. Browser language
+            const savedLang = localStorage.getItem('preferredLang');
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else {
+                const detectedLang = detectBrowserLanguage();
+                setLanguage(detectedLang);
+            }
+        }
+
+        // Language button click handlers
+        const langBtns = document.querySelectorAll('.lang-btn');
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLanguage(btn.dataset.language);
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+            });
+        });
+
+        // Initialize on page load
+        initLanguage();
+    </script>
+</body>
+</html>
