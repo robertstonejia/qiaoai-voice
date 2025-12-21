@@ -1733,12 +1733,25 @@
             contactForm.submit();
         }
 
+        // Backward-compat alias (older builds referenced this name)
+        function submitFormViaAjax() {
+            return submitFormViaIframe();
+        }
+
         function startSending() {
             const email = (document.getElementById('cfEmail')?.value || '').trim();
             if (replyTo) replyTo.value = email;
             if (sendBtn) sendBtn.disabled = true;
             setFormStatus('sending');
-            submitFormViaAjax();
+
+            try {
+                submitFormViaIframe();
+            } catch (err) {
+                console.error(err);
+                if (sendBtn) sendBtn.disabled = false;
+                isConfirmed = false;
+                setFormStatus('error');
+            }
         }
 
         // Show a success hint if redirected back with ?sent=1 (fallback for non-JS environments)
