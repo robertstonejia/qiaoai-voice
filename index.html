@@ -1303,7 +1303,7 @@
 
 
             <!-- Contact Form -->
-            <form id="contactForm" class="contact-form" action="https://formsubmit.co/qiaoai.voice@gmail.com" method="POST">
+            <form id="contactForm" class="contact-form" action="https://formsubmit.co/qiaoai.voice@gmail.com" method="POST" target="formsubmit_iframe">
                 <div class="form-title">
                     <span data-lang="zh">现在咨询</span>
                     <span data-lang="en">Consult Now</span>
@@ -1361,6 +1361,7 @@
                 <p class="form-status" id="formStatus"></p>
             </form>
 
+            <iframe name="formsubmit_iframe" id="formsubmit_iframe" style="display:none" title="formsubmit"></iframe>
 
             <div class="qr-codes">
                 <div class="qr-item">
@@ -1608,6 +1609,16 @@
             }
         }
 
+
+        function initFormSubmitSettings() {
+            // When JS is enabled, we submit into a hidden iframe, so we don't need to redirect the top page.
+            // This avoids page jump / refresh and reduces X-Frame-Options issues.
+            try {
+                const nextInput = contactForm?.querySelector('input[name="_next"]');
+                if (nextInput) nextInput.value = 'about:blank';
+            } catch (_) {}
+        }
+
         // Language button click handlers
         const langBtns = document.querySelectorAll('.lang-btn');
         langBtns.forEach(btn => {
@@ -1667,8 +1678,8 @@
                 `,
                 error: `
                     <span data-lang="zh">发送失败，请稍后再试（或直接邮件联系我们）。</span>
-                    <span data-lang="en">Submission failed. Please try again later (or email us directly).</span>
-                    <span data-lang="jp">送信に失敗しました。しばらくしてから再度お試しください（またはメールでご連絡ください）。</span>
+                    <span data-lang="en">Sending failed. Please try again later (or contact us directly by email).</span>
+                    <span data-lang="jp">送信に失敗しました。時間をおいて再度お試しください（またはメールでお問い合わせください）。</span>
                 `
             };
             formStatus.innerHTML = (messages[state] || '').trim();
@@ -1681,27 +1692,45 @@
             }
         }
 
-        async function submitFormViaAjax() {
+        function submitFormViaIframe() {
             if (!contactForm) return;
-            const formData = new FormData(contactForm);
-            try {
-                const res = await fetch(contactForm.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
-                if (res.ok) {
-                    setFormStatus('success');
-                    contactForm.reset();
-                } else {
-                    setFormStatus('error');
-                }
-            } catch (_) {
-                setFormStatus('error');
-            } finally {
+
+            const iframe = document.getElementById('formsubmit_iframe');
+            // Safety fallback: if iframe missing, do a normal submit
+            if (!iframe) {
+                contactForm.submit();
+                return;
+            }
+
+            let completed = false;
+
+            const cleanup = () => {
+                completed = true;
                 isConfirmed = false;
                 if (sendBtn) sendBtn.disabled = false;
-            }
+            };
+
+            const onLoad = () => {
+                if (completed) return;
+                cleanup();
+                setFormStatus('success');
+                try { contactForm.reset(); } catch (_) {}
+            };
+
+            // If the iframe doesn't load (network, blocked, etc.), show error after a timeout
+            const timeoutMs = 12000;
+            const timer = setTimeout(() => {
+                if (completed) return;
+                cleanup();
+                setFormStatus('error');
+            }, timeoutMs);
+
+            iframe.addEventListener('load', () => {
+                clearTimeout(timer);
+                onLoad();
+            }, { once: true });
+
+            contactForm.submit();
         }
 
         function startSending() {
@@ -1826,7 +1855,7 @@
                     return;
                 }
 
-                // Confirmed: proceed with sending (AJAX; no page jump)
+                // Confirmed: proceed with sending (hidden iframe; no page jump)
                 e.preventDefault();
                 startSending();
                 return;
@@ -1837,7 +1866,7 @@
 
         // Initialize on page load
 
-        document.addEventListener('DOMContentLoaded', initLanguage);
+        document.addEventListener('DOMContentLoaded', () => { initLanguage(); initFormSubmitSettings(); });
     </script>
 </body>
 </html>
