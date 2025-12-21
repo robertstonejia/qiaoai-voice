@@ -1189,17 +1189,17 @@
 
 
             <!-- Contact Form -->
-            <form id="contactForm" class="contact-form" action="https://formsubmit.co/935198051@qq.com" method="POST" target="_blank">
+            <form id="contactForm" class="contact-form" action="https://formsubmit.co/935198051@qq.com" method="POST">
                 <div class="form-title">
                     <span data-lang="zh">现在咨询</span>
                     <span data-lang="en">Consult Now</span>
                     <span data-lang="jp">今すぐお問い合わせ</span>
                 </div>
-                <input type="hidden" name="_subject" value="网站咨询（QIAOAI VOICE）" />
+                <input type="hidden" name="_subject" value="【ジョウアイ・メディア株式会社】公式サイトお問い合わせ" />
                 <input type="hidden" name="_template" value="table" />
-                <input type="hidden" name="_captcha" value="false" />
+                                <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="_cc" value="qiaoai.voice@gmail.com" />
-                <input type="hidden" name="_next" value="./?sent=1" />
+                <input type="hidden" name="_next" value="https://qiaoai-voice.com/?sent=1" />
 <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
                 <input type="hidden" name="_replyto" id="cfReplyTo" value="" />
 
@@ -1468,9 +1468,9 @@
 
 
         
-        // Contact form submit (direct send): use standard HTML form POST to FormSubmit.
+        // Contact form submit (direct send): use standard HTML form POST to .
         // To: 935198051@qq.com
-        // Tip: First delivery may require a one-time confirmation email from FormSubmit to the recipient inbox.
+        // Tip: First delivery may require a one-time confirmation email from  to the recipient inbox.
         const contactForm = document.getElementById('contactForm');
         const formStatus = document.getElementById('formStatus');
         const sendBtn = document.getElementById('sendBtn');
@@ -1480,7 +1480,7 @@
         try {
             const params = new URLSearchParams(location.search);
             if (params.get('sent') === '1' && formStatus) {
-                formStatus.textContent = '已送信（已提交）。如未收到邮件，请检查垃圾箱/拦截，并搜索 FormSubmit。';
+                formStatus.textContent = '提交成功！我们已收到您的咨询，将尽快回复。';
             }
         } catch (_) {}
 
@@ -1490,7 +1490,7 @@
                 if (replyTo) replyTo.value = email;
                 if (sendBtn) sendBtn.disabled = true;
                 if (formStatus) formStatus.textContent = '送信中…（将在新窗口完成提交）';
-                // Do NOT prevent default — allow normal POST to FormSubmit.
+                // Do NOT prevent default — allow normal POST to .
             });
         }
 
