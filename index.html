@@ -1303,7 +1303,7 @@
 
 
             <!-- Contact Form -->
-            <form id="contactForm" class="contact-form" action="https://formsubmit.co/qiaoai.voice@gmail.com" method="POST" target="formsubmit_iframe">
+            <form id="contactForm" class="contact-form" action="https://formsubmit.co/qiaoai.voice@gmail.com" method="POST">
                 <div class="form-title">
                     <span data-lang="zh">现在咨询</span>
                     <span data-lang="en">Consult Now</span>
@@ -1361,7 +1361,6 @@
                 <p class="form-status" id="formStatus"></p>
             </form>
 
-            <iframe name="formsubmit_iframe" id="formsubmit_iframe" style="display:none" title="formsubmit"></iframe>
 
             <div class="qr-codes">
                 <div class="qr-item">
@@ -1524,14 +1523,14 @@
 
             <div class="confirm-actions">
                 <button class="confirm-btn cancel" type="button" id="confirmCancel">
-                    <span data-lang="zh">修改</span>
+                    <span data-lang="zh">返回修改</span>
                     <span data-lang="en">Edit</span>
-                    <span data-lang="jp">修正</span>
+                    <span data-lang="jp">戻って修正</span>
                 </button>
                 <button class="confirm-btn ok" type="button" id="confirmOk">
-                    <span data-lang="zh">发送</span>
+                    <span data-lang="zh">确认送信</span>
                     <span data-lang="en">Send</span>
-                    <span data-lang="jp">送信</span>
+                    <span data-lang="jp">確認して送信</span>
                 </button>
             </div>
         </div>
@@ -1609,16 +1608,6 @@
             }
         }
 
-
-        function initFormSubmitSettings() {
-            // When JS is enabled, we submit into a hidden iframe, so we don't need to redirect the top page.
-            // This avoids page jump / refresh and reduces X-Frame-Options issues.
-            try {
-                const nextInput = contactForm?.querySelector('input[name="_next"]');
-                if (nextInput) nextInput.value = 'about:blank';
-            } catch (_) {}
-        }
-
         // Language button click handlers
         const langBtns = document.querySelectorAll('.lang-btn');
         langBtns.forEach(btn => {
@@ -1663,111 +1652,15 @@
         const sendBtn = document.getElementById('sendBtn');
         const replyTo = document.getElementById('cfReplyTo');
 
-        function setFormStatus(state) {
-            if (!formStatus) return;
-            const messages = {
-                sending: `
-                    <span data-lang="zh">提交中…</span>
-                    <span data-lang="en">Sending…</span>
-                    <span data-lang="jp">送信中…</span>
-                `,
-                success: `
-                    <span data-lang="zh">提交成功！我们已收到您的咨询，将尽快回复。</span>
-                    <span data-lang="en">Submitted successfully! We’ve received your inquiry and will get back to you soon.</span>
-                    <span data-lang="jp">送信完了！お問い合わせを受け付けました。折り返しご連絡いたします。</span>
-                `,
-                error: `
-                    <span data-lang="zh">发送失败，请稍后再试（或直接邮件联系我们）。</span>
-                    <span data-lang="en">Sending failed. Please try again later (or contact us directly by email).</span>
-                    <span data-lang="jp">送信に失敗しました。時間をおいて再度お試しください（またはメールでお問い合わせください）。</span>
-                `
-            };
-            formStatus.innerHTML = (messages[state] || '').trim();
-        }
-
-        function focusContactForm() {
-            const el = document.getElementById('contactForm') || document.getElementById('contact');
-            if (el && el.scrollIntoView) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        function submitFormViaIframe() {
-            if (!contactForm) return;
-
-            const iframe = document.getElementById('formsubmit_iframe');
-            // Safety fallback: if iframe missing, do a normal submit
-            if (!iframe) {
-                contactForm.submit();
-                return;
-            }
-
-            let completed = false;
-
-            const cleanup = () => {
-                completed = true;
-                isConfirmed = false;
-                if (sendBtn) sendBtn.disabled = false;
-            };
-
-            const onLoad = () => {
-                if (completed) return;
-                cleanup();
-                setFormStatus('success');
-                try { contactForm.reset(); } catch (_) {}
-            };
-
-            // If the iframe doesn't load (network, blocked, etc.), show error after a timeout
-            const timeoutMs = 12000;
-            const timer = setTimeout(() => {
-                if (completed) return;
-                cleanup();
-                setFormStatus('error');
-            }, timeoutMs);
-
-            iframe.addEventListener('load', () => {
-                clearTimeout(timer);
-                onLoad();
-            }, { once: true });
-
-            contactForm.submit();
-        }
-
-        // Backward-compat alias (older builds referenced this name)
-        function submitFormViaAjax() {
-            return submitFormViaIframe();
-        }
-
-        function startSending() {
-            const email = (document.getElementById('cfEmail')?.value || '').trim();
-            if (replyTo) replyTo.value = email;
-            if (sendBtn) sendBtn.disabled = true;
-            setFormStatus('sending');
-
-            try {
-                submitFormViaIframe();
-            } catch (err) {
-                console.error(err);
-                if (sendBtn) sendBtn.disabled = false;
-                isConfirmed = false;
-                setFormStatus('error');
-            }
-        }
-
-        // Show a success hint if redirected back with ?sent=1 (fallback for non-JS environments)
+        // Show a success hint if redirected back with ?sent=1
         try {
             const params = new URLSearchParams(location.search);
-            if (params.get('sent') === '1') {
-                setFormStatus('success');
-                focusContactForm();
-                // Clean up URL without reloading
-                params.delete('sent');
-                const newQuery = params.toString();
-                const newUrl = location.pathname + (newQuery ? `?${newQuery}` : '') + location.hash;
-                history.replaceState(null, '', newUrl);
+            if (params.get('sent') === '1' && formStatus) {
+                formStatus.textContent = '提交成功！我们已收到您的咨询，将尽快回复。';
             }
         } catch (_) {}
 
+        
         // Confirm modal logic
         const confirmModal = document.getElementById('confirmModal');
         const confirmBackdrop = document.getElementById('confirmBackdrop');
@@ -1829,19 +1722,16 @@
                 isConfirmed = true;
                 closeConfirmModal();
 
-                // Re-check validation (some browsers won't show messages unless we call reportValidity)
-                if (contactForm && !contactForm.checkValidity()) {
-                    isConfirmed = false;
-                    if (contactForm.reportValidity) contactForm.reportValidity();
-                    return;
-                }
-
-                // requestSubmit triggers the normal submit flow (including our submit handler).
+                // requestSubmit triggers the normal submit flow (including validation and our submit handler).
                 if (contactForm?.requestSubmit) {
                     contactForm.requestSubmit();
-                } else {
-                    // Older fallback: send via AJAX directly to avoid redirect/jump
-                    startSending();
+                } else if (contactForm) {
+                    // Fallback: manually update status and submit (bypasses submit event in some browsers)
+                    const email = (document.getElementById('cfEmail')?.value || '').trim();
+                    if (replyTo) replyTo.value = email;
+                    if (sendBtn) sendBtn.disabled = true;
+                    if (formStatus) formStatus.textContent = '送信中…';
+                    contactForm.submit();
                 }
             });
         }
@@ -1868,10 +1758,12 @@
                     return;
                 }
 
-                // Confirmed: proceed with sending (hidden iframe; no page jump)
-                e.preventDefault();
-                startSending();
-                return;
+                // Confirmed: proceed with sending
+                const email = (document.getElementById('cfEmail')?.value || '').trim();
+                if (replyTo) replyTo.value = email;
+                if (sendBtn) sendBtn.disabled = true;
+                if (formStatus) formStatus.textContent = '送信中…';
+                // allow normal POST
             });
         }
 
@@ -1879,7 +1771,7 @@
 
         // Initialize on page load
 
-        document.addEventListener('DOMContentLoaded', () => { initLanguage(); initFormSubmitSettings(); });
+        document.addEventListener('DOMContentLoaded', initLanguage);
     </script>
 </body>
 </html>
