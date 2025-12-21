@@ -899,6 +899,120 @@
         @media (max-width: 480px) {
             .send-btn { width: 100%; }
         }
+        
+        /* Confirm modal */
+        .confirm-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 18px;
+        }
+        .confirm-modal.active { display: flex; }
+        .confirm-backdrop{
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(2px);
+        }
+        .confirm-dialog{
+            position: relative;
+            width: min(560px, 100%);
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.18);
+            padding: 18px 18px 14px;
+            overflow: hidden;
+        }
+        .confirm-dialog::before{
+            content:'';
+            position:absolute;
+            top:0; left:0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+        .confirm-title{
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 10px 0 12px;
+        }
+        .confirm-content{
+            background: var(--bg-cream);
+            border: 1px solid rgba(10, 77, 140, 0.10);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .confirm-row{
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(10, 77, 140, 0.08);
+            font-size: 0.92rem;
+        }
+        .confirm-row:last-child{ border-bottom: none; }
+        .confirm-label{
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .confirm-value{
+            color: var(--text-dark);
+            word-break: break-word;
+        }
+        .confirm-message{
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
+        .confirm-actions{
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+        .confirm-btn{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(10, 77, 140, 0.18);
+            background: rgba(10, 77, 140, 0.06);
+            color: var(--accent-color);
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .confirm-btn:hover{
+            background: rgba(10, 77, 140, 0.10);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-soft);
+        }
+        .confirm-btn.ok{
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+        .confirm-btn.ok:hover{
+            box-shadow: var(--shadow-hover);
+        }
+        .confirm-btn:disabled{
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        @media (max-width: 480px){
+            .confirm-row{ grid-template-columns: 72px 1fr; }
+            .confirm-actions{ flex-direction: column; }
+            .confirm-btn{ width: 100%; }
+        }
+
         </style>
 </head>
 <body>
@@ -1361,6 +1475,68 @@
         </div>
     </footer>
 
+
+    <!-- Confirm Modal -->
+    <div class="confirm-modal" id="confirmModal" aria-hidden="true">
+        <div class="confirm-backdrop" id="confirmBackdrop"></div>
+        <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+            <div class="confirm-title" id="confirmTitle">
+                <span data-lang="zh">确认发送内容</span>
+                <span data-lang="en">Confirm your message</span>
+                <span data-lang="jp">送信内容の確認</span>
+            </div>
+
+            <div class="confirm-content">
+                <div class="confirm-row">
+                    <div class="confirm-label">
+                        <span data-lang="zh">姓名</span>
+                        <span data-lang="en">Name</span>
+                        <span data-lang="jp">お名前</span>
+                    </div>
+                    <div class="confirm-value" id="confirmName"></div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">
+                        <span data-lang="zh">邮箱</span>
+                        <span data-lang="en">Email</span>
+                        <span data-lang="jp">メール</span>
+                    </div>
+                    <div class="confirm-value" id="confirmEmail"></div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">
+                        <span data-lang="zh">主题</span>
+                        <span data-lang="en">Subject</span>
+                        <span data-lang="jp">件名</span>
+                    </div>
+                    <div class="confirm-value" id="confirmSubject"></div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">
+                        <span data-lang="zh">内容</span>
+                        <span data-lang="en">Message</span>
+                        <span data-lang="jp">内容</span>
+                    </div>
+                    <div class="confirm-value confirm-message" id="confirmMessage"></div>
+                </div>
+            </div>
+
+            <div class="confirm-actions">
+                <button class="confirm-btn cancel" type="button" id="confirmCancel">
+                    <span data-lang="zh">返回修改</span>
+                    <span data-lang="en">Edit</span>
+                    <span data-lang="jp">戻って修正</span>
+                </button>
+                <button class="confirm-btn ok" type="button" id="confirmOk">
+                    <span data-lang="zh">确认送信</span>
+                    <span data-lang="en">Send</span>
+                    <span data-lang="jp">確認して送信</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // Mobile menu functions
         function toggleMobileMenu() {
@@ -1484,15 +1660,113 @@
             }
         } catch (_) {}
 
+        
+        // Confirm modal logic
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmBackdrop = document.getElementById('confirmBackdrop');
+        const confirmNameEl = document.getElementById('confirmName');
+        const confirmEmailEl = document.getElementById('confirmEmail');
+        const confirmSubjectEl = document.getElementById('confirmSubject');
+        const confirmMessageEl = document.getElementById('confirmMessage');
+        const confirmCancelBtn = document.getElementById('confirmCancel');
+        const confirmOkBtn = document.getElementById('confirmOk');
+
+        let isConfirmed = false;
+
+        function openConfirmModal() {
+            if (!confirmModal) return;
+            confirmModal.classList.add('active');
+            confirmModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeConfirmModal() {
+            if (!confirmModal) return;
+            confirmModal.classList.remove('active');
+            confirmModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        function fillConfirmContent() {
+            const name = (document.getElementById('cfName')?.value || '').trim();
+            const email = (document.getElementById('cfEmail')?.value || '').trim();
+            const subject = (document.getElementById('cfSubject')?.value || '').trim();
+            const message = (document.getElementById('cfMessage')?.value || '').trim();
+
+            if (confirmNameEl) confirmNameEl.textContent = name || '-';
+            if (confirmEmailEl) confirmEmailEl.textContent = email || '-';
+            if (confirmSubjectEl) confirmSubjectEl.textContent = subject || '-';
+            if (confirmMessageEl) confirmMessageEl.textContent = message || '-';
+
+            return { name, email, subject, message };
+        }
+
+        if (confirmBackdrop) {
+            confirmBackdrop.addEventListener('click', () => {
+                // Clicking the backdrop closes the modal (do not confirm)
+                isConfirmed = false;
+                closeConfirmModal();
+            });
+        }
+
+        if (confirmCancelBtn) {
+            confirmCancelBtn.addEventListener('click', () => {
+                isConfirmed = false;
+                closeConfirmModal();
+            });
+        }
+
+        if (confirmOkBtn) {
+            confirmOkBtn.addEventListener('click', () => {
+                // Confirm and submit
+                isConfirmed = true;
+                closeConfirmModal();
+
+                // requestSubmit triggers the normal submit flow (including validation and our submit handler).
+                if (contactForm?.requestSubmit) {
+                    contactForm.requestSubmit();
+                } else if (contactForm) {
+                    // Fallback: manually update status and submit (bypasses submit event in some browsers)
+                    const email = (document.getElementById('cfEmail')?.value || '').trim();
+                    if (replyTo) replyTo.value = email;
+                    if (sendBtn) sendBtn.disabled = true;
+                    if (formStatus) formStatus.textContent = '送信中…';
+                    contactForm.submit();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && confirmModal?.classList.contains('active')) {
+                isConfirmed = false;
+                closeConfirmModal();
+            }
+        });
+
         if (contactForm) {
-            contactForm.addEventListener('submit', () => {
+            contactForm.addEventListener('submit', (e) => {
+                // Before showing the confirm modal, run native HTML validation.
+                if (!isConfirmed) {
+                    if (!contactForm.checkValidity()) {
+                        e.preventDefault();
+                        if (contactForm.reportValidity) contactForm.reportValidity();
+                        return;
+                    }
+                    e.preventDefault();
+                    fillConfirmContent();
+                    openConfirmModal();
+                    return;
+                }
+
+                // Confirmed: proceed with sending
                 const email = (document.getElementById('cfEmail')?.value || '').trim();
                 if (replyTo) replyTo.value = email;
                 if (sendBtn) sendBtn.disabled = true;
                 if (formStatus) formStatus.textContent = '送信中…';
-                // Do NOT prevent default — allow normal POST to .
+                // allow normal POST
             });
         }
+
 
 
         // Initialize on page load
