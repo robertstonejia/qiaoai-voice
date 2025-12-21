@@ -1094,7 +1094,7 @@
                 <div class="contact-line">
                     <span class="emoji">📩</span>
                     <span class="label">Email:</span>
-                    <span class="value"><a href="mailto:935198051z@gmail.com">935198051z@gmail.com</a>(東京)</span>
+                    <span class="value"><a href="mailto:935198051@qq.com">935198051@qq.com</a>(東京)</span>
                 </div>
                 <div class="contact-line">
                     <span class="emoji">📩</span>
@@ -1122,7 +1122,7 @@
 
 
             <!-- Contact Form -->
-            <form id="contactForm" class="contact-form" action="https://formsubmit.co/935198051@qq.com" method="POST">
+            <form id="contactForm" class="contact-form" action="https://formsubmit.co/935198051@qq.com" method="POST" target="_blank">
                 <div class="form-title">
                     <span data-lang="zh">现在咨询</span>
                     <span data-lang="en">Consult Now</span>
@@ -1132,7 +1132,9 @@
                 <input type="hidden" name="_cc" value="kahyousei@gmail.com" />
                 <input type="hidden" name="_subject" value="网站咨询（QIAOAI VOICE）" />
                 <input type="hidden" name="_template" value="table" />
-                <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+                                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_next" value="./?sent=1" />
+<input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
                 <input type="hidden" name="_replyto" id="cfReplyTo" value="" />
 
                 <div class="form-row">
@@ -1400,70 +1402,35 @@
 
 
         
-        // Contact form submit -> FormSubmit (direct send, no backend)
-// Notes:
-// - First time: FormSubmit will send an activation email to the primary address. Click "Activate" once.
-// - After activation, submissions are delivered directly to the inbox.
-// Docs: https://formsubmit.co/documentation (AJAX endpoint: /ajax/your@email.com)
-const contactForm = document.getElementById('contactForm');
-const formStatus = document.getElementById('formStatus');
-const sendBtn = document.getElementById('sendBtn');
-const replyTo = document.getElementById('cfReplyTo');
+        // Contact form submit (direct send): use standard HTML form POST to FormSubmit.
+        // To: 935198051@qq.com
+        // CC (test): kahyousei@gmail.com
+        // Tip: First delivery may require a one-time confirmation email from FormSubmit to the recipient inbox.
+        const contactForm = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const sendBtn = document.getElementById('sendBtn');
+        const replyTo = document.getElementById('cfReplyTo');
 
-const FORMSUBMIT_EMAIL = '935198051@qq.com';
-const FORMSUBMIT_AJAX = `https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`;
-
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (formStatus) formStatus.textContent = '';
-
-        const name = (document.getElementById('cfName')?.value || '').trim();
-        const email = (document.getElementById('cfEmail')?.value || '').trim();
-        const subject = (document.getElementById('cfSubject')?.value || '').trim();
-        const message = (document.getElementById('cfMessage')?.value || '').trim();
-
-        if (!name || !email || !message) {
-            if (formStatus) formStatus.textContent = '请填写：姓名 / 邮箱 / 内容。';
-            return;
-        }
-
-        if (replyTo) replyTo.value = email;
-
-        if (sendBtn) sendBtn.disabled = true;
-        if (formStatus) formStatus.textContent = '正在发送…';
-
+        // Show a success hint if redirected back with ?sent=1
         try {
-            const formData = new FormData(contactForm);
-
-            const res = await fetch(FORMSUBMIT_AJAX, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (!res.ok) {
-                let msg = `送信失败（HTTP ${res.status}）`;
-                try {
-                    const data = await res.json();
-                    if (data && data.message) msg = data.message;
-                } catch (_) {}
-                throw new Error(msg);
+            const params = new URLSearchParams(location.search);
+            if (params.get('sent') === '1' && formStatus) {
+                formStatus.textContent = '已送信（已提交）。如未收到邮件，请检查垃圾箱/拦截，并搜索 FormSubmit。';
             }
+        } catch (_) {}
 
-            if (formStatus) formStatus.textContent = '已送信！我们会尽快联系你。';
-            contactForm.reset();
-        } catch (err) {
-            if (formStatus) formStatus.textContent = (err && err.message) ? err.message : '送信失败，请稍后再试。';
-        } finally {
-            if (sendBtn) sendBtn.disabled = false;
+        if (contactForm) {
+            contactForm.addEventListener('submit', () => {
+                const email = (document.getElementById('cfEmail')?.value || '').trim();
+                if (replyTo) replyTo.value = email;
+                if (sendBtn) sendBtn.disabled = true;
+                if (formStatus) formStatus.textContent = '送信中…（将在新窗口完成提交）';
+                // Do NOT prevent default — allow normal POST to FormSubmit.
+            });
         }
-    });
-}
 
-// Initialize on page load
+
+        // Initialize on page load
 
         document.addEventListener('DOMContentLoaded', initLanguage);
     </script>
